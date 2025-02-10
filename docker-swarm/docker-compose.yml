@@ -1,0 +1,151 @@
+version: "3.8"
+
+configs:
+  telegraf_cfg:
+    file: ./telegraf/telegraf.template.conf
+    template_driver: true
+
+services:
+  # =================
+  # Database (Manager Node)
+  # =================
+  influxdb:
+    image: influxdb:latest
+    hostname: greenlab-influxdb
+    restart: unless-stopped
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - monitoring-network
+    ports:
+      - "18086:8086"
+    environment:
+      INFLUXD_REPORTING_DISABLED: 'true'
+      INFLUXD_HTTP_BIND_ADDRESS: ':8086'
+      DOCKER_INFLUXDB_INIT_MODE: 'setup'
+      DOCKER_INFLUXDB_INIT_USERNAME: 'grafana'
+      DOCKER_INFLUXDB_INIT_PASSWORD: 'grafana12345'
+      DOCKER_INFLUXDB_INIT_ORG: 'greenlab'
+      DOCKER_INFLUXDB_INIT_BUCKET: 'greenlab_bucket'
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: 'mytoken'
+    volumes:
+      - influxdb-volume:/var/lib/influxdb2:rw
+
+  # =================
+  # Visualization (Manager Node)
+  # =================
+  grafana:
+    image: greenlab-monitoring-grafana
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+    hostname: greenlab-grafana
+    restart: unless-stopped
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - monitoring-network
+    ports:
+      - "13000:3000"
+    volumes:
+      - grafana-volume:/var/lib/grafana
+
+  # =================
+  # Telegraf (Global)
+  # =================
+  telegraf:
+    image: telegraf:latest
+    hostname: greenlab-telegraf
+    restart: unless-stopped
+    deploy:
+      mode: global
+    configs:
+      - source: telegraf_cfg
+        target: /etc/telegraf/telegraf.conf
+    networks:
+      - monitoring-network
+    ports:
+      - "18125:8125/udp"   # If you need a StatsD/Datadog input; remove if unused
+    depends_on:
+      - influxdb
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      INFLUXDB_URL: 'http://influxdb:8086'
+      INFLUXDB_TOKEN: 'SSY4aFdBglj2QZWsyvPg98EeNgQj06YxJn-XDTNvstTneZJVe0GCrPUnwpCHyFhVrYqep5HfbC1KyP4o7b7kNw=='
+      INFLUXDB_ORG: 'greenlab'
+
+  # =================
+  # Scaphandre (Local Power/Energy Metrics - Global)
+  # =================
+  scaphandre:
+    image: hubblo/scaphandre:latest
+    hostname: greenlab-scaphandre
+    restart: unless-stopped
+    deploy:
+      mode: global
+    privileged: true
+    networks:
+      - monitoring-network
+    # No ports published externally; Telegraf can scrape "http://scaphandre:80"
+    volumes:
+      - type: bind
+        source: /proc
+        target: /proc
+      - type: bind
+        source: /sys/class/powercap
+        target: /sys/class/powercap
+    command: ["prometheus"]
+
+  # =================
+  # Node Exporter (Global)
+  # =================
+  node-exporter:
+    image: prom/node-exporter:latest
+    hostname: greenlab-node-exporter
+    restart: unless-stopped
+    deploy:
+      mode: global
+    networks:
+      - monitoring-network
+    # Removed external ports, Telegraf scrapes "http://node-exporter:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|host|etc)($$|/)'
+      - '--collector.rapl'
+
+  # =================
+  # cAdvisor (Global)
+  # =================
+  cadvisor:
+    image: google/cadvisor:latest
+    hostname: greenlab-cadvisor
+    restart: unless-stopped
+    deploy:
+      mode: global
+    networks:
+      - monitoring-network
+    # Removed external ports, Telegraf scrapes "http://cadvisor:8081"
+    command:
+      - '-port=8081'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+
+volumes:
+  grafana-volume:
+  influxdb-volume:
+
+networks:
+  monitoring-network:
+    driver: overlay

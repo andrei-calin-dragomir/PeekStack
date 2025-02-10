@@ -1,0 +1,24 @@
+# config file version
+apiVersion: 1
+
+# list of datasources to insert/update depending
+# what's available in the database
+datasources:
+  # InfluxDB datasource configuration
+  - name: InfluxDB
+    # Datasource type
+    type: influxdb
+    # Access mode
+    access: proxy
+    # Organization ID
+    orgId: 1
+    # URL to the InfluxDB service
+    url: http://influxdb:18086
+    # Database name (if used)
+    database: hpc_monitoring
+    # Version of the datasource
+    version: 1
+    # Allow users to edit datasources from the UI
+    editable: true
+    jsonData:
+      httpMode: GET
