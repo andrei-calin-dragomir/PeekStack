@@ -1,0 +1,88 @@
+services:
+  scaphandre:
+    image: hubblo/scaphandre:latest
+    container_name: scaphandre
+    privileged: true # Scaphandre typically needs privilege/capabilities for hardware counters
+    expose:
+      - "8080" # Only accessible to other containers on the same Docker network
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /proc
+        target: /proc
+      - type: bind
+        source: /sys/class/powercap
+        target: /sys/class/powercap
+    command: ["prometheus"]
+    networks:
+      - monitoring-network
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    expose:
+      - "8081" # Only accessible within Docker network
+    deploy:
+      mode: global
+    command:
+      - "--port=8081"
+      - "--store_container_labels=false"
+      - "--global_housekeeping_interval=1m0s"
+      - "--storage_duration=10s"
+
+      # These optimizations lower CPU utilization of CAdvisor significantly (source: https://dev.to/cloudx/taming-cadvisors-high-cpu-usage-1nm5)
+      - "--housekeeping_interval=1s"
+      - "--docker_only=true" # This can be modified depending on necessity
+      - "--disable_metrics=percpu,sched,tcp,udp,disk"
+    networks:
+      - monitoring-network
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    expose:
+      - "9100" # Only accessible within Docker network
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(diskstats|sys|proc|host|etc)($$|/)"
+      # - '--collector.rapl' If Scaphandre is doing it, this is redundant
+    networks:
+      - monitoring-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    # Make Prometheus accessible externally via localhost:9090
+    ports:
+      - "0.0.0.0:9090:9090" # Bind to all network interfaces
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    # Configure retention to 2 weeks and store data in /prometheus
+    command:
+      - "--storage.tsdb.retention.time=2w"
+      - "--storage.tsdb.path=/prometheus"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - monitoring-network
+networks:
+  monitoring-network:
+    driver: bridge
+
+volumes:
+  prometheus_data:

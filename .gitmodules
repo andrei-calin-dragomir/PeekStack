@@ -1,9 +1,0 @@
-[submodule "swarm-autoscaler"]
-	path = swarm-autoscaler
-	url = https://github.com/andrei-calin-dragomir/swarm-autoscaler.git
-[submodule "swarm-monitoring"]
-	path = swarm-monitoring
-	url = https://github.com/vnzstc/swarm-monitoring.git
-[submodule "swarm-experiment-runner-interface"]
-	path = swarm-experiment-runner-interface
-	url = https://github.com/andrei-calin-dragomir/swarm-experiment-runner-interface.git

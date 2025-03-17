@@ -4,7 +4,7 @@
 ![Swarm Experiment Runner Interface Deployment Status](https://img.shields.io/badge/ExperimentRunner-workinprogress-yellow)
 ![Swarm Migrator Deployment Status](https://img.shields.io/badge/Migrator-theoretical-lightgrey)
 
-## Swarm Configuration (GreenLab)
+## Cluster Configuration (GreenLab)
 ![Cluster Configuration](GreenLab.png)
 
 ## About
@@ -14,8 +14,11 @@ It also provides services that provide container orchestrating techniques with a
 Each module contains its own `README.md` where you can find more information about how the modules are implemented as well as usage instructions.
 
 ### General
-- Containerization Platform: [Docker Swarm](https://docs.docker.com/engine/swarm/)
+- Containerization Platform: [Docker](https://docs.docker.com/engine/swarm/)
 
-- Docker Node Active Configuration:
-  - GreenLab-STF : Master Node
-  - GL2, GL5, MOX2 (Offline) : Worker Nodes
+### Available metrics
+- [CAdvisor](https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md): Analyzes resource usage and performance characteristics of running containers. 
+- [Scaphandre]()
+- [Node-Exporter]()
+
+

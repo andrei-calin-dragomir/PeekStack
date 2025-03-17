@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  # =================
+  # Visualization
+  # =================
+  grafana:
+    image: greenlab-monitoring-grafana
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+    hostname: greenlab-grafana
+    restart: unless-stopped
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - monitoring-network
+    ports:
+      - "13000:3000"
+    volumes:
+      - grafana-volume:/var/lib/grafana
+
+volumes:
+  grafana-volume:
+
+networks:
+  monitoring-network:
+    driver: overlay
