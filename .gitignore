@@ -1,0 +1,9 @@
+# Ignore generated configurations
+collector/nginx/certs/
+collector/nginx/.htpasswd
+
+collector/prometheus/alertmanager.yml
+collector/prometheus.yml
+
+# Ignore configuration variables
+config.env

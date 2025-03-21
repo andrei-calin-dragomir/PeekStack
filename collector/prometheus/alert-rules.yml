@@ -7,21 +7,21 @@ groups:
         labels:
           severity: warning
         annotations:
-          summary: "Scaphandre is down"
-          description: "The Scaphandre exporter is not responding for more than 1 minute."
+          summary: "Scaphandre is down on {{ $labels.host }}"
+          description: "The Scaphandre exporter has been offline for more than 1 minute."
       - alert: CAdvisorNotResponding
         expr: up{job="cadvisor"} == 0
         for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "CAdvisor is down"
-          description: "The CAdvisor exporter is not responding for more than 1 minute."
+          summary: "CAdvisor is down on {{ $labels.host }}"
+          description: "The CAdvisor exporter has been offline for more than 1 minute."
       - alert: NodeExporterNotResponding
         expr: up{job="node_exporter"} == 0
         for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "Node-Exporter is down"
-          description: "The Node-Exporter exporter is not responding for more than 1 minute."
+          summary: "Node-Exporter is down on {{ $labels.host }}"
+          description: "The Node-Exporter exporter has been offline for more than 1 minute."

@@ -63,8 +63,8 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     # Make Prometheus accessible externally via localhost:9090
-    ports:
-      - "0.0.0.0:9090:9090" # Bind to all network interfaces
+    expose:
+      - "9090" # Bind to all network interfaces
     restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -86,8 +86,23 @@ services:
       - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
+    expose:
+      - "9093"
+    networks:
+      - monitoring-network
+
+  nginx:
+    image: nginx:stable
+    container_name: nginx-gateway
     ports:
-      - "0.0.0.0:9093:9093" # Bind to all network interfaces
+      - "9090:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - prometheus
+      - alertmanager
     networks:
       - monitoring-network
 
