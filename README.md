@@ -1,24 +1,24 @@
-# greenlab-docker-swarm
-![Swarm Monitoring Deployment Status](https://img.shields.io/badge/Monitoring-deployable-brightgreen)
-![Swarm Autoscaler Deployment Status](https://img.shields.io/badge/Autoscaler-deployable-brightgreen)
-![Swarm Experiment Runner Interface Deployment Status](https://img.shields.io/badge/ExperimentRunner-workinprogress-yellow)
-![Swarm Migrator Deployment Status](https://img.shields.io/badge/Migrator-theoretical-lightgrey)
+# Cluster Monitoring
 
-## Cluster Configuration (GreenLab)
-![Cluster Configuration](GreenLab.png)
-
-## About
 This repository contains the toolkit for gathering, processing and exporting machine metrics with a focus on power consumption.
-It also provides services that provide container orchestrating techniques with a focus on energy efficiency optimizations.
-
-Each module contains its own `README.md` where you can find more information about how the modules are implemented as well as usage instructions.
 
 ### General
-- Containerization Platform: [Docker](https://docs.docker.com/engine/swarm/)
+- Containerization Platform: [Docker](https://docs.docker.com/engine/)
+```bash
+Client: Docker Engine - Community
+ Version:           27.3.1
+ API version:       1.47
 
+Server: Docker Engine - Community
+ Engine:
+  Version:          27.3.1
+  API version:      1.47 (minimum version 1.24)
+ containerd:
+  Version:          1.7.22
+```
 ### Available metrics
-- [CAdvisor](https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md): Analyzes resource usage and performance characteristics of running containers. 
-- [Scaphandre]()
-- [Node-Exporter]()
+- [CAdvisor](https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md): Analyzes resource usage and performance characteristics of running container;
+- [Scaphandre](https://hubblo-org.github.io/scaphandre-documentation/references/metrics.html): Measuring power/energy consumed on bare metal hosts;
+- [Node-Exporter](https://github.com/prometheus/node_exporter?tab=readme-ov-file#collectors): Exporter for machine level metrics.
 
 

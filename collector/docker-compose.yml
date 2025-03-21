@@ -1,30 +1,26 @@
 services:
   scaphandre:
-    image: hubblo/scaphandre:latest
+    image: hubblo/scaphandre
     container_name: scaphandre
-    privileged: true # Scaphandre typically needs privilege/capabilities for hardware counters
-    expose:
-      - "8080" # Only accessible to other containers on the same Docker network
     restart: unless-stopped
+    privileged: true
+    expose:
+      - "8080"
+    command: 
+      - "-s"
+      - "powercap_rapl"
+      - "prometheus"
     volumes:
-      - type: bind
-        source: /proc
-        target: /proc
-      - type: bind
-        source: /sys/class/powercap
-        target: /sys/class/powercap
-    command: ["prometheus"]
+      - /proc:/proc
+      - /sys/class/powercap:/sys/class/powercap
     networks:
       - monitoring-network
-
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
     restart: unless-stopped
     expose:
       - "8081" # Only accessible within Docker network
-    deploy:
-      mode: global
     command:
       - "--port=8081"
       - "--store_container_labels=false"
@@ -71,7 +67,8 @@ services:
       - "0.0.0.0:9090:9090" # Bind to all network interfaces
     restart: unless-stopped
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert-rules.yml:/etc/prometheus/alert-rules.yml
       - prometheus_data:/prometheus
     # Configure retention to 2 weeks and store data in /prometheus
     command:
@@ -80,6 +77,20 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - monitoring-network
+
+
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alert-manager
+    volumes:
+      - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - "0.0.0.0:9093:9093" # Bind to all network interfaces
+    networks:
+      - monitoring-network
+
 networks:
   monitoring-network:
     driver: bridge
