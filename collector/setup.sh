@@ -2,6 +2,15 @@
 
 set -e
 
+# Check if htpasswd is available
+if ! command -v htpasswd &> /dev/null; then
+    echo "🔍 htpasswd not found. Installing apache2-utils..."
+    sudo apt-get update
+    sudo apt-get -y install apache2-utils
+else
+    echo "✅ htpasswd is already installed."
+fi
+
 # Load user config
 source config.env
 
