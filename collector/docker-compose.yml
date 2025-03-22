@@ -11,8 +11,17 @@ services:
       - "powercap_rapl"
       - "prometheus"
     volumes:
-      - /proc:/proc
-      - /sys/class/powercap:/sys/class/powercap
+      - type: bind
+        source: /proc
+        target: /proc
+        bind:
+          propagation: rshared
+
+      - type: bind
+        source: /sys/class/powercap
+        target: /sys/class/powercap
+        bind:
+          propagation: rshared
     networks:
       - monitoring-network
   cadvisor:
@@ -69,9 +78,26 @@ services:
       - "9100" # Only accessible within Docker network
     restart: unless-stopped
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
+      - type: bind
+        source: /proc
+        target: /host/proc
+        read_only: true
+        bind:
+          propagation: rshared
+
+      - type: bind
+        source: /sys
+        target: /host/sys
+        read_only: true
+        bind:
+          propagation: rshared
+
+      - type: bind
+        source: /
+        target: /rootfs
+        read_only: true
+        bind:
+          propagation: rshared
     command:
       - "--path.procfs=/host/proc"
       - "--path.rootfs=/rootfs"
