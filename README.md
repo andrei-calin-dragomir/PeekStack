@@ -1,30 +1,63 @@
-# Cluster Monitoring
+# 📊 Cluster Monitoring
 
-This repository contains the toolkit for gathering, processing and exporting machine metrics with a focus on power consumption, deployed using [Docker](https://docs.docker.com/engine/)
+This repository provides a toolkit for **gathering**, **processing**, and **visualizing** machine metrics — with a focus on **power consumption** — using a containerized stack based on [Docker](https://docs.docker.com/engine/).
 
-### Available metrics
-- [CAdvisor](https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md): Analyzes resource usage and performance characteristics of running container;
-- [Scaphandre](https://hubblo-org.github.io/scaphandre-documentation/references/metrics.html): Measuring power/energy consumed on bare metal hosts;
-- [Node-Exporter](https://github.com/prometheus/node_exporter?tab=readme-ov-file#collectors): Exporter for machine level metrics.
+---
 
-### Setup
-In order to setup the `collector` stack you need to take the following steps:
-1. Create a `config.env` file in the `collector` directory containing:
+## Available Metrics
 
-| Variable Name   | Description                                                                 |
-|----------------|-----------------------------------------------------------------------------|
-| `AUTH_USERNAME` | Username for basic HTTPS authentication used to access Prometheus/NGINX. Defaults to 'admin'   |
-| `AUTH_PASSWORD` | Password for the above user. Used to generate the `.htpasswd` file. Defaults to 'password'      |
-| `HOST_NAME`     | Custom label for the host machine in Prometheus scrape configs. Defaults to system hostname. |
+The stack includes the following Prometheus-compatible exporters:
 
-2. Run the `setup.sh` file present in its directory which sets up the credentials based connection to the stack as well as configuring HTTPS connectivity to the Prometheus endpoint.
+- 🔍 **[cAdvisor](https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md)**  
+  Collects resource usage and performance characteristics of running containers.
 
-3. If the script runs successfully, you can now deploy the stack using `docker compose up -d`
+- ⚡ **[Scaphandre](https://hubblo-org.github.io/scaphandre-documentation/references/metrics.html)**  
+  Measures power and energy consumption on bare-metal Linux machines.
 
-4. You can now access the Prometheus database using the credentials from your `config.env` file on the `https://<machine_IP>:9090/`.
+- 🖥 **[Node Exporter](https://github.com/prometheus/node_exporter)**  
+  Provides system-level metrics such as CPU, memory, disk, and network usage.
 
-**Note:** When accessing the database, your browser will warn you to not access due to the certificates of the endpoint being self-signed.
+---
 
-### Known Limitations
-1. Scaphandre can only be polled for energy based metrics once every 2 seconds, with the latest tested version (v1.0.2)
-2. 
+## Deployment
+
+### 🔹 Collectors
+
+To deploy the **Collector** stack, which exposes the metrics to Prometheus:
+
+➡️ See the [`collector/README.md`](./collector/README.md) for setup and deployment instructions.
+
+---
+
+### 🔹 Monitoring
+
+The **Monitoring** stack includes a preconfigured **Grafana** dashboard that connects to one or more Prometheus datasources.
+
+#### Setup Prometheus Datasource in Grafana
+
+To connect to the `collector` stack securely:
+
+1. Add the Prometheus datasource using the credentials configured during its setup.
+2. Enable **“Skip TLS verification”** under the TLS settings (if using self-signed certificates).
+
+Once configured, Grafana will be accessible at:
+
+`http://<your-machine-ip>:13000/`
+
+> 📍 Default port for Grafana is `13000`
+
+---
+
+## ⚠️ Known Limitations
+
+- ⏱ **Scaphandre Polling Rate**:  
+  Energy metrics can only be scraped once every **2 seconds** (as of `v1.0.2`). Using lower scrape intervals will result in failed requests or missing energy related data.
+
+---
+
+## Example Use Case
+
+This setup is suitable for:
+- Energy-aware containerized workloads
+- Teaching environments involving system monitoring
+- Benchmarking power consumption across nodes (in a cluster)

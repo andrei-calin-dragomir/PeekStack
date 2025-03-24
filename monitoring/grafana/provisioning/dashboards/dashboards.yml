@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: 'Shared Dashboards'
+    orgId: 1
+    folder: 'Overview'         # This will be the folder name in the Grafana UI
+    type: file
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards/
