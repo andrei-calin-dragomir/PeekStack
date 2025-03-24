@@ -33,8 +33,8 @@ fi
 AUTH_PASSWORD=$(grep -E '^AUTH_PASSWORD=' config.env | cut -d= -f2)
 
 if [ -z "$AUTH_PASSWORD" ]; then
-  echo "No AUTH_PASSWORD specified, defaulting to 'password'"
-  AUTH_PASSWORD="password"
+  echo "No AUTH_PASSWORD specified, defaulting to 'admin'"
+  AUTH_PASSWORD="admin"
 fi
 
 
