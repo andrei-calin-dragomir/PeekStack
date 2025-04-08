@@ -32,7 +32,7 @@ services:
       - "8081" # Only accessible within Docker network
     command:
       - "--port=8081"
-      - "--store_container_labels=false"
+      - "--store_container_labels=true"
       - "--global_housekeeping_interval=1m0s"
       - "--storage_duration=10s"
 
@@ -42,33 +42,27 @@ services:
       - "--disable_metrics=percpu,sched,tcp,udp,disk"
     networks:
       - monitoring-network
-
     volumes:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
         read_only: true
-
       - type: bind
         source: /
         target: /rootfs
         read_only: true
-        bind:
-          propagation: rshared
-
       - type: bind
         source: /var/run
         target: /var/run
         read_only: true
-        bind:
-          propagation: rshared
-
       - type: bind
         source: /sys
         target: /sys
         read_only: true
-        bind:
-          propagation: rshared
+      - type: bind
+        source: /var/lib/docker
+        target: /var/lib/docker
+        read_only: true
 
 
   node-exporter:
