@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     privileged: true
     expose:
-      - "8080"
+      - "18080"
     command: 
       - "-s"
       - "powercap_rapl"
@@ -29,9 +29,9 @@ services:
     container_name: cadvisor
     restart: unless-stopped
     expose:
-      - "8081" # Only accessible within Docker network
+      - "18081" # Only accessible within Docker network
     command:
-      - "--port=8081"
+      - "--port=18081"
       - "--store_container_labels=true"
       - "--global_housekeeping_interval=1m0s"
       - "--storage_duration=10s"
@@ -69,7 +69,7 @@ services:
     image: prom/node-exporter:latest
     container_name: node_exporter
     expose:
-      - "9100" # Only accessible within Docker network
+      - "19100" # Only accessible within Docker network
     restart: unless-stopped
     volumes:
       - type: bind
@@ -106,7 +106,7 @@ services:
     container_name: prometheus
     # Make Prometheus accessible externally via localhost:9090
     expose:
-      - "9090" # Bind to all network interfaces
+      - "19090" # Bind to all network interfaces
     restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
