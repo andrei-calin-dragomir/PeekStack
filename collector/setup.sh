@@ -95,18 +95,21 @@ scrape_configs:
       - targets: ['node-exporter:9100']
         labels:
           host: $HOST_NAME
+    fallback_scrape_protocol: PrometheusText0.0.4
 
   - job_name: 'scaphandre'
     static_configs:
       - targets: ['scaphandre:8080']
         labels:
           host: $HOST_NAME
+    fallback_scrape_protocol: PrometheusText0.0.4
 
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8081']
         labels:
           host: $HOST_NAME
+    fallback_scrape_protocol: PrometheusText0.0.4
 EOF
 echo "✅ prometheus.yml generated with host: $HOST_NAME"
 
