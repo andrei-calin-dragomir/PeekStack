@@ -31,7 +31,7 @@ services:
     expose:
       - "18081" # Only accessible within Docker network
     command:
-      - "--port=18081"
+      - "--port=8081"
       - "--store_container_labels=true"
       - "--global_housekeeping_interval=1m0s"
       - "--storage_duration=10s"
@@ -106,13 +106,14 @@ services:
     container_name: prometheus
     # Make Prometheus accessible externally via localhost:9090
     expose:
-      - "19090" # Bind to all network interfaces
+      - "19090" # Only accessible within Docker network
     restart: unless-stopped
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     # Configure retention to 2 weeks and store data in /prometheus
     command:
+      - "--web.listen-address=:19090"
       - "--storage.tsdb.retention.time=2w"
       - "--storage.tsdb.path=/prometheus"
       - "--config.file=/etc/prometheus/prometheus.yml"
