@@ -86,25 +86,25 @@ global:
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['prometheus:19090']
+      - targets: ['prometheus:9090']
         labels:
           host: $HOST_NAME
 
   - job_name: 'node-exporter'
     static_configs:
-      - targets: ['node-exporter:19100']
+      - targets: ['node-exporter:9100']
         labels:
           host: $HOST_NAME
 
   - job_name: 'scaphandre'
     static_configs:
-      - targets: ['scaphandre:18080']
+      - targets: ['scaphandre:8080']
         labels:
           host: $HOST_NAME
 
   - job_name: 'cadvisor'
     static_configs:
-      - targets: ['cadvisor:18081']
+      - targets: ['cadvisor:8081']
         labels:
           host: $HOST_NAME
 EOF
