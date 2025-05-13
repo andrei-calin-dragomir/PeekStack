@@ -6,7 +6,8 @@ services:
     privileged: true
     expose:
       - "18080"
-    command: 
+    command:
+      - "--web.listen-address=:18080"
       - "-s"
       - "powercap_rapl"
       - "prometheus"
@@ -31,11 +32,10 @@ services:
     expose:
       - "18081" # Only accessible within Docker network
     command:
-      - "--port=8081"
+      - "--port=18081"
       - "--store_container_labels=true"
       - "--global_housekeeping_interval=1m0s"
       - "--storage_duration=10s"
-
       # These optimizations lower CPU utilization of CAdvisor significantly (source: https://dev.to/cloudx/taming-cadvisors-high-cpu-usage-1nm5)
       - "--housekeeping_interval=1s"
       - "--docker_only=true" # This can be modified depending on necessity
@@ -93,6 +93,7 @@ services:
         bind:
           propagation: rshared
     command:
+      - "--web.listen-address=:19100"
       - "--path.procfs=/host/proc"
       - "--path.rootfs=/rootfs"
       - "--path.sysfs=/host/sys"
