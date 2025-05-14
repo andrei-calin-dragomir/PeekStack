@@ -1,4 +1,4 @@
-# 📊 Cluster Monitoring
+# 📊 PeekStack
 
 This repository provides a toolkit for **gathering**, **processing**, and **visualizing** machine metrics — with a focus on **power consumption** — using a containerized stack based on [Docker](https://docs.docker.com/engine/).
 
