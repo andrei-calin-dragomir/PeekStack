@@ -35,9 +35,9 @@ The **Monitoring** stack includes a preconfigured **Grafana** dashboard that con
 
 #### Setup Prometheus Datasource in Grafana
 
-To connect to the `collector` stack securely:
+To connect to the `collector` stack:
 
-1. Add the Prometheus datasource using the credentials configured during its setup.
+1. Add a new Prometheus datasource using the credentials configured during its setup.
 2. Enable **“Skip TLS verification”** under the TLS settings (if using self-signed certificates).
 
 Once configured, Grafana will be accessible at:
