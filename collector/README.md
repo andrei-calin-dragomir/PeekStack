@@ -16,7 +16,7 @@ In the `collector` directory, create a `config.env` file with the following vari
 
 | Variable        | Description                                                                 |
 |-----------------|-----------------------------------------------------------------------------|
-| `AUTH_USERNAME` | Username for basic HTTPS authentication (used to access Prometheus/NGINX). Defaults to `admin`. |
+| `AUTH_USERNAME` | Username for basic HTTPS authentication (used to access Prometheus through NGINX). Defaults to `admin`. |
 | `AUTH_PASSWORD` | Password for the above user. Used to generate the `.htpasswd` file. Defaults to `admin`. |
 | `HOST_NAME`     | Optional label for the host in Prometheus metrics. Defaults to the system hostname. |
 
@@ -46,7 +46,7 @@ docker compose up -d
 
 Once the stack is running, access the Prometheus web UI at:
 
-`https://<your_machine_ip>:9090/`
+`https://<your_machine_ip>:19090/`
 
 Log in using the credentials defined in your `config.env` file.
 
