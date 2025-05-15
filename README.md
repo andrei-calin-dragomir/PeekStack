@@ -29,9 +29,9 @@ To deploy the **Collector** stack, which exposes the metrics to Prometheus:
 
 ---
 
-### 🔹 Monitoring
+### 🔹 Interface
 
-The **Monitoring** stack includes a preconfigured **Grafana** dashboard that connects to one or more Prometheus datasources.
+The **Interface** stack includes a preconfigured **Grafana** dashboard that connects to one or more Prometheus datasources.
 
 #### Setup Prometheus Datasource in Grafana
 
@@ -48,16 +48,18 @@ Once configured, Grafana will be accessible at:
 
 ---
 
+## Example Dashboards
+
+### Monitoring System-level status
+![Alt text](images/system_monitoring.png)
+
+### Monitoring Containerized Applications in Docker
+![Alt text](images/app_monitoring.png)
+
+
 ## ⚠️ Known Limitations
 
 - ⏱ **Scaphandre Polling Rate**:  
   Energy metrics can only be scraped once every **2 seconds** (as of `v1.0.2`). Using lower scrape intervals will result in failed requests or missing energy related data.
 
 ---
-
-## Example Use Case
-
-This setup is suitable for:
-- Energy-aware containerized workloads
-- Teaching environments involving system monitoring
-- Benchmarking power consumption across nodes (in a cluster)

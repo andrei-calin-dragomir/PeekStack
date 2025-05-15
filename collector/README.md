@@ -10,7 +10,7 @@ Follow these steps to configure and deploy the `collector` stack.
 
 ---
 
-### 1. Create `config.env`
+### 1. Create `config.env` (optional but recommended)
 
 In the `collector` directory, create a `config.env` file with the following variables:
 

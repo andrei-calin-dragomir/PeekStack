@@ -1,6 +1,5 @@
 # Ignore provided configuration files
 config.env
-monitoring/*.csv
 
 # Ignore generated configurations
 collector/prometheus/prometheus.yml

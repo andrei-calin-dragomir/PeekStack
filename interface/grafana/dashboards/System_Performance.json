@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 4,
   "links": [],
   "panels": [
     {
@@ -46,12 +46,18 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 50
               },
               {
                 "color": "red",
@@ -64,12 +70,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 24,
+        "h": 5,
+        "w": 4,
         "x": 0,
         "y": 1
       },
-      "id": 7,
+      "id": 2,
       "options": {
         "displayMode": "gradient",
         "legend": {
@@ -81,11 +87,11 @@
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "auto",
+        "namePlacement": "top",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "last"
           ],
           "fields": "",
           "values": false
@@ -101,17 +107,111 @@
             "type": "prometheus",
             "uid": "${Datasources}"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "exemplar": false,
-          "expr": "scaph_process_cpu_usage_percentage{exe=~\"/usr/bin/cadvisor|/usr/local/bin/scaphandre|/bin/node_exporter|/bin/prometheus\"}",
-          "instant": false,
-          "legendFormat": "{{exe}}",
+          "expr": "sum(scaph_process_cpu_usage_percentage)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "CPU",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Datasources}"
+          },
+          "editorMode": "code",
+          "expr": "sum(scaph_process_memory_bytes) / max(scaph_host_memory_total_bytes) * 100",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "RAM",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Collector Component CPU Usage",
+      "title": "Resource Utilization",
+      "transparent": true,
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Datasources}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "fieldMinMax": false,
+          "mappings": [],
+          "max": 4500,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 2000
+              },
+              {
+                "color": "red",
+                "value": 3500
+              }
+            ]
+          },
+          "unit": "rothz"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 8,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Datasources}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "scaph_host_cpu_frequency",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "CPU Frequency",
+      "transparent": true,
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -147,16 +247,16 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 9,
-        "x": 0,
-        "y": 9
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 1
       },
       "id": 1,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
-        "justifyMode": "center",
+        "justifyMode": "auto",
         "orientation": "auto",
         "percentChangeColorMode": "inverted",
         "reduceOptions": {
@@ -207,18 +307,12 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 50
               },
               {
                 "color": "red",
@@ -231,29 +325,35 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 9,
-        "y": 9
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 1
       },
-      "id": 2,
+      "id": 7,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
           ],
-          "fields": "/^sum\\(scaph_process_cpu_usage_percentage\\)$/",
+          "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
+        "showUnfilled": true,
         "sizing": "auto",
-        "text": {
-          "valueSize": 50
-        }
+        "valueMode": "color"
       },
       "pluginVersion": "11.5.2",
       "targets": [
@@ -262,20 +362,18 @@
             "type": "prometheus",
             "uid": "${Datasources}"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(scaph_process_cpu_usage_percentage)",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
+          "exemplar": false,
+          "expr": "scaph_process_cpu_usage_percentage{exe=~\"/usr/bin/cadvisor|/usr/local/bin/scaphandre|/bin/node_exporter|/bin/prometheus\"}",
+          "instant": false,
+          "legendFormat": "{{exe}}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "CPU Utilization (%)",
+      "title": "Collector Component CPU Usage",
       "transparent": true,
-      "type": "gauge"
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -285,11 +383,42 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
-          "max": 384,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -298,42 +427,37 @@
                 "value": null
               },
               {
-                "color": "#EAB839",
-                "value": 150
-              },
-              {
                 "color": "red",
-                "value": 300
+                "value": 80
               }
             ]
           },
-          "unit": "decgbytes"
+          "unit": "watt"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 14,
-        "y": 9
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 6
       },
-      "id": 3,
+      "id": 9,
       "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
+        "legend": {
           "calcs": [
-            "lastNotNull"
+            "last"
           ],
-          "fields": "",
-          "values": false
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto",
-        "text": {
-          "valueSize": 50
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
         }
       },
       "pluginVersion": "11.5.2",
@@ -343,101 +467,17 @@
             "type": "prometheus",
             "uid": "${Datasources}"
           },
-          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum(scaph_process_memory_bytes) / 1000000000",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
+          "expr": "scaph_process_power_consumption_microwatts / 1000000 > 0",
+          "instant": false,
+          "legendFormat": "{{pid}} {{exe}}",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "RAM Utilization (GB)",
+      "title": "Process Power Consumption (W)",
       "transparent": true,
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${Datasources}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 384,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 150
-              },
-              {
-                "color": "red",
-                "value": 300
-              }
-            ]
-          },
-          "unit": "decgbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 19,
-        "y": 9
-      },
-      "id": 4,
-      "options": {
-        "minVizHeight": 75,
-        "minVizWidth": 75,
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true,
-        "sizing": "auto",
-        "text": {
-          "valueSize": 50
-        }
-      },
-      "pluginVersion": "11.5.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${Datasources}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum(scaph_process_memory_virtual_bytes) / 1000000000",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "VRAM Utilization (GB)",
-      "transparent": true,
-      "type": "gauge"
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -500,10 +540,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 9,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 15
       },
       "id": 5,
       "options": {
@@ -512,7 +552,7 @@
             "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "bottom",
+          "placement": "right",
           "showLegend": true,
           "sortBy": "Last *",
           "sortDesc": true
@@ -553,10 +593,12 @@
         "allowCustomValue": false,
         "current": {
           "text": [
-            "GL5"
+            "GL5",
+            "GL6"
           ],
           "value": [
-            "cegmg5ofeuepsc"
+            "begta8co2ybcwd",
+            "aegtabj2rj4e8b"
           ]
         },
         "hide": 1,
@@ -572,13 +614,13 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Template Scaphandre",
-  "uid": "eegpqc88zdla8c",
-  "version": 1,
+  "title": "System Performance",
+  "uid": "aelwew9jbtddsc",
+  "version": 2,
   "weekStart": ""
 }
